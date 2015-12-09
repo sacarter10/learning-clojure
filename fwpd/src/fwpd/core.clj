@@ -8,8 +8,6 @@
   (map #(clojure.string/split % #",")
        (clojure.string/split string #"\n")))
 
-(def vamp-keys [:name :glitter-index])
-
 (defn str->int
   [str]
   (Integer. str))
@@ -22,22 +20,20 @@
   ((get conversions vamp-key) value))
 
 
-(defn mapify
-  "Return a seq of maps like {:name \"Edward Cullen\" :glitter-index 10}"
-  [rows]
-  (map (fn [unmapped-row]
-         (reduce (fn [row-map [vamp-key value]]
-                   (assoc row-map vamp-key (convert vamp-key value)))
-                 {}
-                 (map vector vamp-keys unmapped-row)))
-       rows))
 
+(def vamp-keys [:name :glitter-index])
 
-(def validating-functions
-{ 
-  :name  (fn [suspect-map] 
-              (get suspect-map name))
-})
+(defn make-list-of-pairs-into-Map [row-map [vamp-key value]]
+  (assoc row-map vamp-key (convert vamp-key value))
+)
+
+(defn do-this-to-each-row [unmapped-row]
+  (reduce make-list-of-pairs-into-Map {} (map vector vamp-keys unmapped-row))
+)
+
+; "Return a seq of maps like {:name \"Edward Cullen\" :glitter-index 10}"
+(defn mapify [rows]
+  (map do-this-to-each-row rows))
 
 (defn validate-suspect [new-suspect]
   true
@@ -60,6 +56,9 @@
        new-suspect { :name "Dracula" 
                      :glitter-index 10}
        final-list (append-suspect original-list new-suspect)]
+
+  (println "mapified")
+  (println original-list)
  
  (println (vampire-names (glitter-filter 3 final-list)))))
 
