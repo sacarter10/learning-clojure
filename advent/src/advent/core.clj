@@ -1,4 +1,5 @@
-(ns advent.core)
+(ns advent.core
+	(:require [advent.direction-interpreter :as di]))
 
 (def filename "gifts.txt")
 
@@ -41,17 +42,47 @@
 				length (get map-of-dimensions :length)
 				smallest-area (area-of-smallest-side height width length)]		
 
-	(+ (+ (* 2 length width) (* 2 width height) (* 2 height length)) smallest-area)
-	)
-)
+	(+ (+ (* 2 length width) (* 2 width height) (* 2 height length)) smallest-area)))
 
 (defn total-surface-area [list-of-packages]
 	(reduce + (map surface-area list-of-packages))
 )
 
+(defn cubic-volume [map-of-dimensions]
+	(let [height (get map-of-dimensions :height)
+				width (get map-of-dimensions :width)
+				length (get map-of-dimensions :length)]
+
+	(* height width length)
+))
+
+(defn smallest-face-perimeter [map-of-dimensions]
+	(let [height (get map-of-dimensions :height)
+				width (get map-of-dimensions :width)
+				length (get map-of-dimensions :length)
+				largest-side (max height width length)]
+
+	(- (+ (* 2 height) (* 2 width) (* 2 length)) (* 2 largest-side))
+))
+
+; perimeter of smallest face + cubic volume of present
+(defn ribbon-length [map-of-dimensions]
+	(+ (smallest-face-perimeter map-of-dimensions) (cubic-volume map-of-dimensions))
+)
+
+(defn total-ribbon-length [list-of-packages]
+	(reduce + (map ribbon-length list-of-packages))
+)
+
+
 (defn -main []
  (let [original-list (parse (slurp filename))
  			 list-of-packages (mapify original-list)]
+
+; Day 2: how much wrapping paper?
 (println (total-surface-area list-of-packages))
- ))
+; Day 2, part 2: how much ribbon?
+(println (total-ribbon-length list-of-packages))
+; Day 3: how many houses get presents?
+))
 
