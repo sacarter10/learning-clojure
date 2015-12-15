@@ -84,5 +84,7 @@
 ; Day 2, part 2: how much ribbon?
 (println (total-ribbon-length list-of-packages))
 ; Day 3: how many houses get presents?
+(println (di/count-visited-houses))
+
 ))
 
