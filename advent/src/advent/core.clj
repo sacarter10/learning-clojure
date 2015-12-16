@@ -80,9 +80,9 @@
  			 list-of-packages (mapify original-list)]
 
 ; Day 2: how much wrapping paper?
-(println (total-surface-area list-of-packages))
+;(println (total-surface-area list-of-packages))
 ; Day 2, part 2: how much ribbon?
-(println (total-ribbon-length list-of-packages))
+;(println (total-ribbon-length list-of-packages))
 ; Day 3: how many houses get presents?
 (println (di/count-visited-houses))
 
